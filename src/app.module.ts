@@ -45,6 +45,7 @@ import { AuthModule } from './auth/auth.module';
       driver: ApolloDriver,
       autoSchemaFile: true,
       playground: true,
+      path: '/graphql',
     }),
 
     // Modules
