@@ -8,13 +8,17 @@ import { JwtTokenServices } from "../jwt/jwt.service";
 import { RefreshToken } from "../entities/refresh-token.entity";
 import { BooleanMessage } from "../entities/boolean-message.entity";
 import { LoginUserInput } from "../dto/login-user.input.";
+import { Status } from "src/user/database/status.entity";
 
 @Injectable()
 export class AuthRepository {
+  private readonly ACTIVE_STATUS: number = 1;
 
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>,
+        @InjectRepository(Status)
+        private statusRepository: Repository<Status>,
         private readonly jwtTokenServices: JwtTokenServices
     ) {}
 
@@ -30,6 +34,11 @@ export class AuthRepository {
         if (existingEmail) throw new ConflictException("Email already registered");
         
 
+    const status = await this.statusRepository.findOne({ where: { id: this.ACTIVE_STATUS } });
+
+    if (!status) {
+      throw new NotFoundException("User status not found");
+    }
         // Generate Salt
         const salt = await bcrypt.genSalt(10);
 
@@ -45,6 +54,7 @@ export class AuthRepository {
         user.gender = registerdUserInput.gender
         user.profile_image = registerdUserInput.profile_image;
         user.role = registerdUserInput.role;
+        user.status = status;
 
         return await this.userRepository.save(user);
     }

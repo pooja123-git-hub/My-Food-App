@@ -1,7 +1,7 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Gender } from "../enums/gender.enums";
 import { UserRole } from "../enums/role.enums";
-// import { Status } from "./status.entity";
+import { Status } from "./status.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -59,8 +59,10 @@ export class User extends BaseEntity {
   })
   role: UserRole;
 
-//   @ManyToOne(() => Status ,(status) => status.id,)
-//   status: number;
+  @ManyToOne(() => Status
+   ,(status) => status.id,)
+  status: Status;
+  
 
    @Column({
         type: 'varchar',

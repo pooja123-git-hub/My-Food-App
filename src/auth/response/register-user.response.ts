@@ -3,6 +3,11 @@ import { plainToInstance, Type } from "class-transformer";
 import { Gender } from "src/user/enums/gender.enums";
 import { UserRole } from "src/user/enums/role.enums";
 
+export class GetStatusResponse {
+
+    id: number;
+    name: string
+}
 export class RegisterUserResponse {
     full_name: string;
     email: string ;
@@ -10,7 +15,8 @@ export class RegisterUserResponse {
     gender:Gender;
     profile_image: string;
     role: UserRole;
-    // status: Status;
+    @Type(() => GetStatusResponse)
+    status: GetStatusResponse;
     created_at: Date;
     updated_at: Date;
 }
