@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
+import { User } from "src/user/database/user.entity";
 // import { Status } from "src/user/database/status.entity";
 import { Gender } from "src/user/enums/gender.enums";
 import { UserRole } from "src/user/enums/role.enums";
@@ -14,6 +15,17 @@ export class UserRegisterStatusEntity {
   @Field(() => String, { nullable: true })
   name: string;
 }
+
+@ObjectType()
+export class UserRegisterRoleEntity {
+
+  @Field(() => Int)
+  id: number
+
+  @Field(() => String, { nullable: true })
+  name: string;
+}
+
 
 @ObjectType()
 export class RegisterUserEntity {
@@ -34,14 +46,15 @@ export class RegisterUserEntity {
   @Field(() => String, { nullable: true })
   profile_image: string;
 
-  @Field(() => UserRole, { nullable: true })
-  role: UserRole;
 
   @Field(() => Date, { nullable: true })
   created_at: Date;
 
   @Field(() => UserRegisterStatusEntity, { nullable: true })
   status: UserRegisterStatusEntity
+
+   @Field(() => UserRegisterRoleEntity, { nullable: true })
+  role: UserRegisterRoleEntity
 
   @Field(() => Date, { nullable: true })
   updated_at: Date;

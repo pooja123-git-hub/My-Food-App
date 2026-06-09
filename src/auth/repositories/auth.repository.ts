@@ -9,16 +9,21 @@ import { RefreshToken } from "../entities/refresh-token.entity";
 import { BooleanMessage } from "../entities/boolean-message.entity";
 import { LoginUserInput } from "../dto/login-user.input.";
 import { Status } from "src/user/database/status.entity";
+import { Role } from "src/role/database/role.entity";
+import { UserRole } from "src/user/enums/role.enums";
 
 @Injectable()
 export class AuthRepository {
   private readonly ACTIVE_STATUS: number = 1;
+  private readonly USER_ROLE:number = 2;
 
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>,
         @InjectRepository(Status)
         private statusRepository: Repository<Status>,
+        @InjectRepository(Role)
+        private roleRepository: Repository<Role>,
         private readonly jwtTokenServices: JwtTokenServices
     ) {}
 
@@ -32,8 +37,10 @@ export class AuthRepository {
         const existingEmail = await this.userRepository.findOne({where: {email: registerdUserInput.email.toLowerCase()}});
 
         if (existingEmail) throw new ConflictException("Email already registered");
-        
 
+        const role =await this.roleRepository.findOne({where: {id: registerdUserInput.role}});
+        if(!role) throw new NotFoundException("Role Not Found")
+        
     const status = await this.statusRepository.findOne({ where: { id: this.ACTIVE_STATUS } });
 
     if (!status) {
@@ -52,8 +59,8 @@ export class AuthRepository {
         user.password = hashedPassword;
         user.mobile = registerdUserInput.mobile;
         user.gender = registerdUserInput.gender
-        user.profile_image = registerdUserInput.profile_image;
-        user.role = registerdUserInput.role;
+        user.profile_image = registerdUserInput.profile_image
+        user.role = role;
         user.status = status;
 
         return await this.userRepository.save(user);
@@ -74,7 +81,7 @@ export class AuthRepository {
        
         if(!isPasswordMatch) throw new NotFoundException("Invalid Password")
         
-        const tokens = await this.jwtTokenServices.getUserToken(existingUser.email ,existingUser.id);
+        const tokens = await this.jwtTokenServices.getUserToken(existingUser.email ,existingUser.id,existingUser.role.id);
         return {
             ...existingUser,
             ...tokens
@@ -100,7 +107,7 @@ export class AuthRepository {
         throw new ForbiddenException("Access Denied: Invalid Refresh Token"); }
 
     // Generate New Tokens
-    const tokens = await this.jwtTokenServices.getUserToken(user.email,user.id,);
+    const tokens = await this.jwtTokenServices.getUserToken(user.email,user.id,user.role.id);
 
     // Save New Refresh Token
     await this.userRepository.save({...user,refresh_token: tokens.refresh_token,});

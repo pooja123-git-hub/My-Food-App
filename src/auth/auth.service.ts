@@ -34,6 +34,7 @@ async registerUser(registeredUserInput:RegisteredUserInput): Promise<AuthRegiste
   const tokens = await this.jwtTokenServices.getUserToken(
     user.email,
     user.id,
+    user.role.id
   );
 
   // Save Refresh Token

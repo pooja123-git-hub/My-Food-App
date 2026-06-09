@@ -4,7 +4,7 @@ import { AuthRegisterEntity } from "./entities/register-user.entity";
 import { RegisteredUserInput } from "./dto/register-user.input";
 import { AuthLoginEntity } from "./entities/login-user.entity";
 import { UseGuards } from "@nestjs/common/decorators/core/use-guards.decorator";
-import { RtGuard } from "./guards/rt.guards";
+import { RtGuard } from "./guards/rt.guard";
 import { RefreshToken } from "./entities/refresh-token.entity";
 import { GetCurrentUser } from "./decorders/get-current-user.decorder";
 import { BooleanMessage } from "./entities/boolean-message.entity";

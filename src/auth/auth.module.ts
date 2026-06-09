@@ -8,11 +8,12 @@ import { JwtTokenServices } from './jwt/jwt.service';
 import { JwtModule } from '@nestjs/jwt';
 import { RtStrategy } from './strategies/rt.strategy';
 import { Status } from 'src/user/database/status.entity';
+import { Role } from 'src/role/database/role.entity';
 
 @Module({
   // controllers: [AuthController],
     imports: [
-      TypeOrmModule.forFeature([User,Status]),
+      TypeOrmModule.forFeature([User,Status,Role]),
       JwtModule.register({})
     ],
     
