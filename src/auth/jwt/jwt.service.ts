@@ -8,10 +8,11 @@ export class JwtTokenServices{
         private readonly jwtService :JwtService
     )
     {}
-    async getUserToken(email:string,userId:number) :Promise<Token> {
+    async getUserToken(email:string,userId:number,role:number) :Promise<Token> {
         const payload= {
             email:email,
-            id:userId
+            id:userId,
+            roleId:role
         }
         const accessToken =await this.jwtService.signAsync(payload,{
             secret:process.env.JWT_SECRET_KEY,

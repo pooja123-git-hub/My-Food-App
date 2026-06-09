@@ -8,13 +8,19 @@ export class GetStatusResponse {
     id: number;
     name: string
 }
+export class GetRoleResponse {
+
+    id: number;
+    name: string
+}
 export class RegisterUserResponse {
     full_name: string;
     email: string ;
     mobile: string;
     gender:Gender;
     profile_image: string;
-    role: UserRole;
+    @Type(() => GetRoleResponse)
+    role: GetRoleResponse;
     @Type(() => GetStatusResponse)
     status: GetStatusResponse;
     created_at: Date;

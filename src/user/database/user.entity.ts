@@ -1,7 +1,8 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Gender } from "../enums/gender.enums";
 import { UserRole } from "../enums/role.enums";
 import { Status } from "./status.entity";
+import { Role } from "src/role/database/role.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -51,18 +52,15 @@ export class User extends BaseEntity {
   })
   profile_image: string;
 
-    @Column({
-    type: 'enum',
-    enum: UserRole,
-    default: null,
-    nullable: true
-  })
-  role: UserRole;
 
   @ManyToOne(() => Status
    ,(status) => status.id,)
   status: Status;
   
+
+  @ManyToOne(()=>Role ,(role)=>role.id ,{ cascade:true})
+  @Index()
+  role:Role;
 
    @Column({
         type: 'varchar',
